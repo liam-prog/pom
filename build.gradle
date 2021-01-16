@@ -1,12 +1,13 @@
+import com.amin.buildsrc.Dependencies
+
 buildscript {
-    ext.kotlin_version = "1.4.21"
     repositories {
         google()
         jcenter()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:4.2.0-beta03"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath Dependencies.androidGradlePlugin
+        classpath Dependencies.Kotlin.gradlePlugin
     }
 }
 
