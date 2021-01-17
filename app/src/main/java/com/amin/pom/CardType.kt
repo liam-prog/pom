@@ -20,7 +20,7 @@ enum class CardType {
   companion object {
     fun detect(cardNumber: String?): CardType {
       for (cardType in values()) {
-        if (null == cardType.pattern) continue
+        null == cardType.pattern && continue
         if (cardType.pattern!!.matcher(cardNumber).matches()) return cardType
       }
       return UNKNOWN
