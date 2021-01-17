@@ -1,37 +1,68 @@
+import com.amin.buildsrc.Dependencies
+import com.amin.buildsrc.Versions
+
 plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
+  id 'com.android.application'
+  id 'kotlin-android'
+  id 'kotlin-android-extensions'
+  id 'kotlin-kapt'
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+  compileSdkVersion Versions.compileSdkVersion
 
-    defaultConfig {
-        applicationId "com.amin.pom"
-        minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+  defaultConfig {
+    applicationId "com.amin.pom"
+    minSdkVersion Versions.minSdkVersion
+    targetSdkVersion Versions.targetSdkVersion
+    versionCode Versions.versionCode
+    versionName Versions.versionName
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  kotlinOptions {
+    jvmTarget = '1.8'
+  }
+  buildFeatures {
+    dataBinding true
+  }
 }
 
 dependencies {
+  implementation(Dependencies.material)
 
+  implementation(Dependencies.AndroidX.appcompat)
+  implementation(Dependencies.AndroidX.constraintlayout)
+
+  implementation(Dependencies.AndroidX.Lifecycle.viewmodel)
+  implementation(Dependencies.AndroidX.Lifecycle.livedata)
+
+  implementation(Dependencies.AndroidX.coreKtx)
+
+  implementation(Dependencies.timber)
+
+  debugImplementation(Dependencies.leakCanary)
+
+  implementation(Dependencies.Kotlin.stdlib)
+
+  implementation(Dependencies.numberPicker)
+
+  implementation(Dependencies.AndroidX.Fragment.fragment)
+  implementation(Dependencies.AndroidX.Fragment.fragmentKtx)
+
+  implementation 'io.card:android-sdk:5.5.1'
+
+  testImplementation(Dependencies.junit)
+  testImplementation(Dependencies.mockK)
 }

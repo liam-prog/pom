@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/appCompatTextView2"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="24dp"
+    android:drawablePadding="16dp"
+    android:gravity="center_vertical"
+    android:text="@string/card_details_are_stored_securely"
+    android:textColor="@color/grey_600"
+    android:textSize="16sp"
+    app:drawableStartCompat="@drawable/ic_lock_24"
+    app:drawableTint="@color/orange_600"
+    tools:showIn="@layout/fragment_card" />
