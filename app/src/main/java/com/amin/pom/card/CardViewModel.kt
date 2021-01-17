@@ -2,35 +2,31 @@ package com.amin.pom.card
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.amin.pom.CardExpire
+import com.amin.pom.CardType
 
 class CardViewModel : ViewModel() {
-
-  private val _viewState = MutableLiveData<ViewState>(ViewState.Ready)
-  val viewState: LiveData<ViewState> get() = _viewState
-
   val cardNumber = MutableLiveData<String>()
-  val expireDate = MutableLiveData<String>()
   val cvv = MutableLiveData<String>()
 
-  fun onExpireClicked() {
-    var year: Int? = null
-    var month: Int? = null
-    expireDate.value?.let {
-      it.split("/").let { list ->
-        if (list.size == 2) {
-          year = list[1].toIntOrNull()
-          month = list[0].toIntOrNull()
-        }
-      }
-    }
+  private val _expireDate = MutableLiveData<CardExpire>()
+  val expireDate: LiveData<CardExpire> get() = _expireDate
 
-    _viewState.value = ViewState.OpenExpireDialog(year, month)
-    _viewState.value = ViewState.Ready
+  val cardExpire: LiveData<String> = Transformations.map(_expireDate) {
+    it?.let { "${it.month}/${it.year}" }
   }
 
-  sealed class ViewState {
-    object Ready : ViewState()
-    data class OpenExpireDialog(val year: Int?, val month: Int?) : ViewState()
+  fun setCardExpire(year: Int, month: Int) {
+    _expireDate.value = CardExpire(year, month)
+  }
+
+  fun clearExpire() {
+    _expireDate.value = null
+  }
+
+  val cardType: LiveData<CardType> = Transformations.map(cardNumber) {
+    it?.trim()?.replace(" ", "")?.let(CardType::detect)
   }
 }

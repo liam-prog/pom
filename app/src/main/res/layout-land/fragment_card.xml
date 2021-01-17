@@ -30,7 +30,7 @@
             </RelativeLayout>
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/appCompatImageView"
+                android:id="@+id/scanCard"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="32dp"
@@ -50,9 +50,9 @@
                 android:text="@string/card_capture"
                 android:textColor="@color/grey_500"
                 android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="@+id/appCompatImageView"
-                app:layout_constraintStart_toStartOf="@+id/appCompatImageView"
-                app:layout_constraintTop_toBottomOf="@+id/appCompatImageView" />
+                app:layout_constraintEnd_toEndOf="@+id/scanCard"
+                app:layout_constraintStart_toStartOf="@+id/scanCard"
+                app:layout_constraintTop_toBottomOf="@+id/scanCard" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/cardNumberInput"
@@ -66,8 +66,8 @@
                 android:text="@={viewModel.cardNumber}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/appCompatImageView"
-                app:layout_constraintTop_toTopOf="@+id/appCompatImageView" />
+                app:layout_constraintStart_toEndOf="@+id/scanCard"
+                app:layout_constraintTop_toTopOf="@+id/scanCard" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/cardExpire"
@@ -78,9 +78,8 @@
                 android:drawableEnd="@drawable/ic_arrow_down_24"
                 android:hint="@string/card_expire_date_hint"
                 android:maxLength="19"
-                android:onClick="@{() -> viewModel.onExpireClicked()}"
                 android:padding="12dp"
-                android:text="@={viewModel.expireDate}"
+                android:text="@{viewModel.cardExpire}"
                 app:drawableTint="@color/orange_600"
                 app:layout_constraintEnd_toStartOf="@+id/cardCVV"
                 app:layout_constraintHorizontal_chainStyle="packed"

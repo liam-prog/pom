@@ -1,12 +1,13 @@
 package com.amin.pom.card
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.widget.doAfterTextChanged
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,8 +15,8 @@ import com.amin.pom.CardType
 import com.amin.pom.R
 import com.amin.pom.databinding.FragmentCardBinding
 import com.amin.pom.utils.CreditCardNumberMask
-import com.amin.pom.utils.expireDateDialog
 import com.amin.pom.utils.setCompoundDrawables
+import com.shawnlin.numberpicker.NumberPicker
 import io.card.payment.CardIOActivity
 import io.card.payment.CreditCard
 import kotlinx.android.synthetic.main.fragment_card.*
@@ -27,6 +28,8 @@ class CardFragment : Fragment() {
 
   private lateinit var binding: FragmentCardBinding
 
+  private var isExpireDialogOpened = false
+
   private val launchScanCard = registerForActivityResult(
     ActivityResultContracts.StartActivityForResult()
   ) { result ->
@@ -35,9 +38,12 @@ class CardFragment : Fragment() {
         CardIOActivity.EXTRA_SCAN_RESULT
       )!!
       cardViewModel.cardNumber.value = scanResult.formattedCardNumber
-      cardViewModel.expireDate.value = if (scanResult.isExpiryValid) {
-        "${scanResult.expiryMonth}/${scanResult.expiryYear}"
-      } else null
+
+      if (scanResult.isExpiryValid)
+        cardViewModel.setCardExpire(scanResult.expiryYear, scanResult.expiryMonth)
+      else
+        cardViewModel.clearExpire()
+
       cardViewModel.cvv.value = scanResult.cvv
     }
   }
@@ -53,12 +59,21 @@ class CardFragment : Fragment() {
     return binding.root
   }
 
+  override fun onSaveInstanceState(outState: Bundle) {
+    super.onSaveInstanceState(outState)
+    outState.putBoolean("IsExpireDialogOpened", isExpireDialogOpened)
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     initCardNumberInputType()
     initObservers()
 
-    binding.appCompatImageView.setOnClickListener {
+    isExpireDialogOpened = savedInstanceState?.getBoolean(
+      "IsExpireDialogOpened", false
+    ) ?: false
+
+    binding.scanCard.setOnClickListener {
       val scanIntent = Intent(requireContext(), CardIOActivity::class.java).apply {
         putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true)
         putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, false)
@@ -66,44 +81,69 @@ class CardFragment : Fragment() {
 
       launchScanCard.launch(scanIntent)
     }
+
+    binding.cardExpire.setOnClickListener {
+      showCardExpireDialog()
+    }
+
+    if (isExpireDialogOpened) {
+      showCardExpireDialog()
+    }
   }
 
   private fun initObservers() {
-    cardViewModel.viewState.observe(viewLifecycleOwner) { state ->
-      when (state) {
-        is CardViewModel.ViewState.OpenExpireDialog -> {
-          showCardExpireDialog(state.year, state.month)
+    cardViewModel.cardType.observe(viewLifecycleOwner) { type ->
+      type?.let {
+        val typeDrawableRes = when (type) {
+          CardType.UNKNOWN -> 0
+          CardType.VISA -> R.drawable.visa
+          CardType.MASTERCARD -> R.drawable.mc
         }
+        cardNumberInput.setCompoundDrawables(right = typeDrawableRes)
       }
     }
   }
 
   private fun initCardNumberInputType() {
-    cardNumberInput.apply {
-      addTextChangedListener(CreditCardNumberMask())
-      doAfterTextChanged {
-        it?.trim()?.toString()?.replace(" ", "")?.also(::setCardType)
-      }
-    }
+    cardNumberInput.addTextChangedListener(CreditCardNumberMask())
   }
 
-  private fun showCardExpireDialog(year: Int?, month: Int?) {
-    expireDateDialog(
-      requireContext(),
-      year = year,
-      month = month,
-      onDateSet = { newYear, newMonth ->
-        cardViewModel.expireDate.value = "$newMonth/$newYear"
-      }
-    )
-  }
-
-  private fun setCardType(cardNumber: String) {
-    val typeDrawableRes = when (CardType.detect(cardNumber)) {
-      CardType.UNKNOWN -> 0
-      CardType.VISA -> R.drawable.visa
-      CardType.MASTERCARD -> R.drawable.mc
+  private fun showCardExpireDialog() {
+    var year: Int? = null
+    var month: Int? = null
+    cardViewModel.expireDate.value?.let {
+      year = it.year
+      month = it.month
     }
-    cardNumberInput.setCompoundDrawables(right = typeDrawableRes)
+
+    var yearPicker: NumberPicker? = null
+    var monthPicker: NumberPicker? = null
+
+    val dialog = AlertDialog.Builder(requireContext(), R.style.AlertDialogStyle).apply {
+      setView(R.layout.dialog_card_expire)
+      setNegativeButton(R.string.close) { dialogInterface: DialogInterface, _: Int ->
+        dialogInterface.dismiss()
+      }
+      setPositiveButton(R.string.ok) { dialogInterface: DialogInterface, _: Int ->
+        cardViewModel.setCardExpire(yearPicker!!.value, monthPicker!!.value)
+        dialogInterface.dismiss()
+      }
+
+      setOnDismissListener {
+        isExpireDialogOpened = false
+      }
+    }.create()
+
+    isExpireDialogOpened = true
+    dialog.show()
+
+    yearPicker = dialog.findViewById(R.id.yearPicker)!!
+    monthPicker = dialog.findViewById(R.id.monthPicker)!!
+
+    if (year != null && year in yearPicker.minValue..yearPicker.maxValue)
+      yearPicker.value = year!!
+
+    if (month != null && month in 1..12)
+      monthPicker.value = month!!
   }
 }
