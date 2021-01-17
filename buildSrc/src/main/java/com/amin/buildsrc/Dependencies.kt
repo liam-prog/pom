@@ -13,6 +13,8 @@ object Dependencies {
 
   const val material = "com.google.android.material:material:1.1.0"
 
+  const val numberPicker = "com.shawnlin:number-picker:2.4.11"
+
   object Kotlin {
     private const val version = "1.4.20"
     const val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
@@ -22,6 +24,12 @@ object Dependencies {
 
   object AndroidX {
     const val appcompat = "androidx.appcompat:appcompat:1.3.0-alpha02"
+
+    object Fragment {
+      private const val version = "1.3.0-beta01"
+      const val fragment = "androidx.fragment:fragment:$version"
+      const val fragmentKtx = "androidx.fragment:fragment-ktx:$version"
+    }
 
     object Test {
       private const val version = "1.3.0"

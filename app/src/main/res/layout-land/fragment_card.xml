@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.amin.pom.card.CardViewModel" />
+    </data>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <include layout="@layout/layout_card_detail_title" />
+            </RelativeLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/appCompatImageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/card_capture_background"
+                android:scaleType="center"
+                app:layout_constraintEnd_toStartOf="@+id/cardNumberInput"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+                app:srcCompat="@drawable/ic_photo_camera_48" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/appCompatTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="@string/card_capture"
+                android:textColor="@color/grey_500"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/appCompatImageView"
+                app:layout_constraintStart_toStartOf="@+id/appCompatImageView"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatImageView" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/cardNumberInput"
+                style="@style/inputs_style"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                android:digits="0123456789 "
+                android:ems="18"
+                android:hint="@string/card_number_hint"
+                android:maxLength="19"
+                android:text="@={viewModel.cardNumber}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/appCompatImageView"
+                app:layout_constraintTop_toTopOf="@+id/appCompatImageView" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/cardExpire"
+                style="@style/inputs_style"
+                android:layout_width="0dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:drawableEnd="@drawable/ic_arrow_down_24"
+                android:hint="@string/card_expire_date_hint"
+                android:maxLength="19"
+                android:onClick="@{() -> viewModel.onExpireClicked()}"
+                android:padding="12dp"
+                android:text="@={viewModel.expireDate}"
+                app:drawableTint="@color/orange_600"
+                app:layout_constraintEnd_toStartOf="@+id/cardCVV"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="@+id/cardNumberInput"
+                app:layout_constraintTop_toBottomOf="@+id/cardNumberInput" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/cardCVV"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/input_background"
+                android:gravity="center_vertical"
+                android:hint="@string/card_cvv_hint"
+                android:inputType="numberPassword"
+                android:maxLength="19"
+                android:maxLines="4"
+                android:padding="12dp"
+                android:text="@={viewModel.cvv}"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/cardExpire"
+                app:layout_constraintEnd_toEndOf="@+id/cardNumberInput"
+                app:layout_constraintStart_toEndOf="@+id/cardExpire"
+                app:layout_constraintTop_toTopOf="@+id/cardExpire" />
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@+id/cardExpire"
+                app:layout_constraintTop_toBottomOf="@+id/cardExpire">
+
+                <include layout="@layout/layout_card_detail_label" />
+
+            </RelativeLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

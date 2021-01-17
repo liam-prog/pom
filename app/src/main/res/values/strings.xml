@@ -1,3 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Pom</string>
+    <string name="title">Enter Your Card Details</string>
+    <string name="card_number_hint">Card Number</string>
+    <string name="card_capture">Card Capture</string>
+    <string name="card_details_are_stored_securely">Card details are stored securely</string>
+    <string name="card_expire_date_hint">Expire Date</string>
+    <string name="card_cvv_hint">CVV</string>
+    <string name="year_formatter">%1$s</string>
+    <string name="expire_format">%1$d,%2$d</string>
+    <string name="ok">OK</string>
+    <string name="close">Close</string>
 </resources>

@@ -4,6 +4,8 @@ import com.amin.buildsrc.Versions
 plugins {
   id 'com.android.application'
   id 'kotlin-android'
+  id 'kotlin-android-extensions'
+  id 'kotlin-kapt'
 }
 
 android {
@@ -32,6 +34,9 @@ android {
   kotlinOptions {
     jvmTarget = '1.8'
   }
+  buildFeatures {
+    dataBinding true
+  }
 }
 
 dependencies {
@@ -50,6 +55,13 @@ dependencies {
   debugImplementation(Dependencies.leakCanary)
 
   implementation(Dependencies.Kotlin.stdlib)
+
+  implementation(Dependencies.numberPicker)
+
+  implementation(Dependencies.AndroidX.Fragment.fragment)
+  implementation(Dependencies.AndroidX.Fragment.fragmentKtx)
+
+  implementation 'io.card:android-sdk:5.5.1'
 
   testImplementation(Dependencies.junit)
   testImplementation(Dependencies.mockK)
