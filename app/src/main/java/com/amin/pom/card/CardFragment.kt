@@ -111,9 +111,11 @@ class CardFragment : Fragment() {
   private fun showCardExpireDialog() {
     var year: Int? = null
     var month: Int? = null
-    cardViewModel.expireDate.value?.let {
-      year = it.year
-      month = it.month
+    cardViewModel.expireDate.value?.let { state ->
+      if (state is CardViewModel.CardExpireState.CardExpire) {
+        year = state.year
+        month = state.month
+      }
     }
 
     var yearPicker: NumberPicker? = null
